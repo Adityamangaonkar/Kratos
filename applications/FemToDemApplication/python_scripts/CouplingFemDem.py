@@ -53,7 +53,9 @@ class FEMDEM_Solution:
           KratosMultiphysics.VariableUtils().SetNonHistoricalVariable(KratosFemDem.IS_DEM, False, self.FEM_Solution.main_model_part.Nodes)
           # Initialize the "flag" NODAL_FORCE_APPLIED in all the nodes
           KratosMultiphysics.VariableUtils().SetNonHistoricalVariable(KratosFemDem.NODAL_FORCE_APPLIED, False, self.FEM_Solution.main_model_part.Nodes)
-
+          # Initialize the "flag" RADIUS in all the nodes
+          KratosMultiphysics.VariableUtils().SetNonHistoricalVariable(KratosMultiphysics.RADIUS, False, self.FEM_Solution.main_model_part.Nodes)
+          
           self.SpheresModelPart = self.DEM_Solution.spheres_model_part
           self.DEMParameters = self.DEM_Solution.DEM_parameters
           self.DEMProperties = self.SpheresModelPart.GetProperties()[1]
@@ -105,6 +107,8 @@ class FEMDEM_Solution:
                     KratosMultiphysics.VariableUtils().SetNonHistoricalVariable(KratosFemDem.IS_DEM, False, self.FEM_Solution.main_model_part.Nodes)
                     # Initialize the "flag" NODAL_FORCE_APPLIED in all the nodes
                     KratosMultiphysics.VariableUtils().SetNonHistoricalVariable(KratosFemDem.NODAL_FORCE_APPLIED, False, self.FEM_Solution.main_model_part.Nodes)
+                    # Initialize the "flag" RADIUS in all the nodes
+                    KratosMultiphysics.VariableUtils().SetNonHistoricalVariable(KratosMultiphysics.RADIUS, False, self.FEM_Solution.main_model_part.Nodes)
 
                     # Remove DEMS from previous mesh
                     self.SpheresModelPart.Elements.clear()
@@ -216,10 +220,10 @@ class FEMDEM_Solution:
                self.RemeshingProcessMMG.ExecuteFinalizeSolutionStep()
 
           # Remove the submodel to be recomputed at each dt
-          # for cond in self.FEM_Solution.main_model_part.GetSubModelPart("SkinDEMModelPart").Conditions:
-          #      cond.Set(KratosMultiphysics.TO_ERASE)
-          # self.FEM_Solution.main_model_part.RemoveConditionsFromAllLevels(KratosMultiphysics.TO_ERASE)
-          # self.FEM_Solution.main_model_part.RemoveSubModelPart("SkinDEMModelPart")
+          for cond in self.FEM_Solution.main_model_part.GetSubModelPart("SkinDEMModelPart").Conditions:
+               cond.Set(KratosMultiphysics.TO_ERASE)
+          self.FEM_Solution.main_model_part.RemoveConditionsFromAllLevels(KratosMultiphysics.TO_ERASE)
+          self.FEM_Solution.main_model_part.RemoveSubModelPart("SkinDEMModelPart")
 
 
 #============================================================================================================================
