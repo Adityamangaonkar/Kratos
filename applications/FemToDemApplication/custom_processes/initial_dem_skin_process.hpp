@@ -58,7 +58,7 @@ public:
         } // InitialDemSkin SubModelPart Filled with nodes
 
         // Let's assign the DEM radius to those nodes...
-        Process& neighbour_finder = FindNodalNeighboursProcess(mrModelPart, 4, 4);
+        Process neighbour_finder = FindNodalNeighboursProcess(mrModelPart, 4, 4);
         neighbour_finder.Execute();
 
         for (ModelPart::NodeIterator it = (*p_auxiliar_model_part).NodesBegin(); it != (*p_auxiliar_model_part).NodesEnd(); ++it) {
