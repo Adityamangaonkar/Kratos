@@ -198,15 +198,15 @@ namespace Kratos
 		void SetIntegrationCoefficient(double tomIntegrationCoefficient){ mIntegrationCoefficient = tomIntegrationCoefficient;}
 		double GetIntegrationCoefficient(){ return mIntegrationCoefficient; }
 
-		void FemDem2DElement::SetValueOnIntegrationPoints(
+		void SetValueOnIntegrationPoints(
 			const Variable<double>& rVariable,
 			std::vector<double>& rValues,
-			const ProcessInfo& rCurrentProcessInfo);
+			const ProcessInfo& rCurrentProcessInfo) override;
 
-		void FemDem2DElement::SetValueOnIntegrationPoints(
+		void SetValueOnIntegrationPoints(
 			const Variable<Vector>& rVariable,
 			std::vector<Vector>& rValues,
-			const ProcessInfo& rCurrentProcessInfo);
+			const ProcessInfo& rCurrentProcessInfo) override;
 		
 	private:
 		int iteration = 0;
