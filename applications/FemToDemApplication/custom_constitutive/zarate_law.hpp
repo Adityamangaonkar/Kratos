@@ -11,7 +11,7 @@
 #define  KRATOS_ZARATE_LAW_H_INCLUDED
 
 #include "includes/constitutive_law.h"
-#include "custom_constitutive\linear_elastic_plane_strain_2D_law.hpp"
+#include "custom_constitutive/linear_elastic_plane_strain_2D_law.hpp"
 
 namespace Kratos
 {
