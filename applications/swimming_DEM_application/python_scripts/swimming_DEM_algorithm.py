@@ -616,7 +616,6 @@ class Algorithm(object):
             #self.PerformEmbeddedOperations() TO-DO: it's crashing
 
             self.UpdateALEMeshMovement(self.time)
-
             # solving the fluid part
             if self.step >= self.GetFirstStepForFluidComputation():
                 self.FluidSolve(

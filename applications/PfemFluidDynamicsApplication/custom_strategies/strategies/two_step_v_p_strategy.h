@@ -405,6 +405,7 @@ public:
 	    (i)->FastGetSolutionStepValue(PRESSURE_VELOCITY,1) = 0.0;
 	    (i)->FastGetSolutionStepValue(PRESSURE_ACCELERATION,0) = 0.0;
 	    (i)->FastGetSolutionStepValue(PRESSURE_ACCELERATION,1) = 0.0;
+
 	    if((i)->SolutionStepsDataHas(VOLUME_ACCELERATION)){
 	      array_1d<double, 3 >& VolumeAcceleration = (i)->FastGetSolutionStepValue(VOLUME_ACCELERATION);
 	      (i)->FastGetSolutionStepValue(ACCELERATION,0) = VolumeAcceleration;

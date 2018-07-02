@@ -1,6 +1,6 @@
 from __future__ import print_function, absolute_import, division #makes KratosMultiphysics backward compatible with python 2.6 and 2.7
 # importing the Kratos Library
-import KratosMultiphysics 
+import KratosMultiphysics
 import KratosMultiphysics.PfemApplication as KratosPfem
 KratosMultiphysics.CheckForPreviousImport()
 
@@ -10,7 +10,7 @@ class ModelerUtility:
 
     def __init__(self, model_part, dimension, remesh_domains):
 
-        self.echo_level = 1        
+        self.echo_level = 1
         self.model_part = model_part
         self.dimension = dimension
 
@@ -37,13 +37,13 @@ class ModelerUtility:
     def Initialize(self):
 
         self.remesh_executed = False
-        
+
     #
     def InitializeDomains(self, ReloadFile = False):
 
-        if( self.modeler_active ):        
+        if( self.modeler_active ):
             print("::[Modeler_Utility]:: Initialize Domains ")
-            
+
             # set active search
             self.search_active = False
 
@@ -88,7 +88,7 @@ class ModelerUtility:
 
         # set search options:
         number_of_avg_elems = 10
-         
+
         # define search utility
         elemental_neighbour_search = KratosPfem.ElementalNeighboursSearch(self.model_part, self.dimension, self.echo_level, number_of_avg_elems)
 
@@ -144,17 +144,17 @@ class ModelerUtility:
 
         #
     def ComputeAverageMeshParameters(self):
-     
-        for domain in self.meshing_domains:
-            if(domain.Active()):
-                domain.ComputeAverageMeshParameters()       
-#
-    def ComputeInitialAverageMeshParameters(self):
-     
 
         for domain in self.meshing_domains:
             if(domain.Active()):
-                domain.ComputeInitialAverageMeshParameters()       
+                domain.ComputeAverageMeshParameters()
+#
+    def ComputeInitialAverageMeshParameters(self):
+
+
+        for domain in self.meshing_domains:
+            if(domain.Active()):
+                domain.ComputeInitialAverageMeshParameters()
 #
 
     def BuildMeshModelers(self, configuration):
@@ -163,7 +163,7 @@ class ModelerUtility:
         if(hasattr(configuration, "echo_level")):
             self.echo_level = configuration.echo_level
 
-            
+
          # check domain consistency
         if(configuration.number_domains != len(configuration.mesh_conditions)):
             print("::[Modeler_Utility]:: Number of Domain Meshing Conditions do not match ")
@@ -172,13 +172,13 @@ class ModelerUtility:
         # if(configuration.number_domains != self.model_part.NumberOfMeshes):
             # print("::[Modeler_Utility]:: Number of Domain Meshing Conditions and Meshes in model_part do not match " )
 
-        # set the domains number to mesh modeler   
+        # set the domains number to mesh modeler
         number_of_domains = self.model_part.NumberOfMeshes();
         if( number_of_domains > configuration.number_domains ): # mesh and constraint meshes
             number_of_domains = configuration.number_domains
             if( number_of_domains == 1 ): # mesh 0 and mesh 1
                 number_of_domains += 1
-                            
+
         # set mesh modeler array
         self.mesh_modeler_vector = []
 
@@ -187,7 +187,7 @@ class ModelerUtility:
 
         ## set transfer utilities
         self.transfer_utils = MeshDataTransferUtilities()
-                
+
         # set the domain labels to mesh modeler
         self.modeler_utils.SetDomainLabels(self.model_part)
 
@@ -199,23 +199,23 @@ class ModelerUtility:
             mesh_modeler = TriangularMesh2DModeler()
             # else:
             # mesh_modeler = TetrahedronMesh3DModeler()
-                
-            
+
+
             mesh_modeler.Initialize()
 
             mesh_modeler.SetEchoLevel(self.echo_level)
 
             mesh_id = int(parameters["Subdomain"])
-            
+
             if(parameters["StructuralType"] == "Solid"):
                 self.modeler_active = True
 
             # create info parameters
             self.InfoParameters   = MeshingInfoParameters()
- 
+
             # set refine parameters to mesh modeler
             self.RefiningParameters = RefiningParameters()
-            
+
             self.RefiningParameters.Initialize()
 
             refining_options = Flags()
@@ -224,11 +224,11 @@ class ModelerUtility:
             ##refine elements
             refining_options.Set(ModelerUtilities.REFINE_ELEMENTS, True)
             refining_options.Set(ModelerUtilities.REFINE_ELEMENTS_ON_DISTANCE, True)
-            refining_options.Set(ModelerUtilities.REFINE_ELEMENTS_ON_THRESHOLD, True)  
+            refining_options.Set(ModelerUtilities.REFINE_ELEMENTS_ON_THRESHOLD, True)
             ##refine boundary
             #refining_options.Set(ModelerUtilities.REFINE_BOUNDARY, True)
             ##refining_options.Set(ModelerUtilities.REFINE_BOUNDARY_ON_DISTANCE, True)
-            #refining_options.Set(ModelerUtilities.REFINE_BOUNDARY_ON_THRESHOLD, True)  
+            #refining_options.Set(ModelerUtilities.REFINE_BOUNDARY_ON_THRESHOLD, True)
 
             self.RefiningParameters.SetRefiningOptions(refining_options)
 
@@ -258,7 +258,7 @@ class ModelerUtility:
             critical_mesh_size = critical_mesh_size * configuration.size_scale
             critical_mesh_side = critical_mesh_size * 3
 
-            self.RefiningParameters.SetCriticalRadius(critical_mesh_size)                       
+            self.RefiningParameters.SetCriticalRadius(critical_mesh_size)
             self.RefiningParameters.SetCriticalSide(critical_mesh_side)
 
 
@@ -276,9 +276,9 @@ class ModelerUtility:
                     velocity_box[size] = parameters["BoxVelocity"][size] * configuration.size_scale
 
                 refining_box = SpatialBoundingBox(center_box, radius_box, velocity_box)
-                
+
                 self.RefiningParameters.SetRefiningBox(refining_box)
-                
+
 
             self.RefiningParameters.SetThresholdVariable(globals()[parameters["DissipationVariable"]])
             self.RefiningParameters.SetReferenceThreshold(parameters["CriticalDissipation"])
@@ -296,13 +296,13 @@ class ModelerUtility:
 
             # set meshing parameters to mesh modeler
             self.MeshingParameters = MeshingParameters()
-            
+
             self.MeshingParameters.Initialize()
 
             self.MeshingParameters.SetInfoParameters(self.InfoParameters)
             self.MeshingParameters.SetRefiningParameters(self.RefiningParameters)
             self.MeshingParameters.SetTransferParameters(self.TransferParameters)
-                        
+
             meshing_options = Flags()
 
             meshing_options.Set(ModelerUtilities.REMESH, parameters["Remesh"])
@@ -310,16 +310,16 @@ class ModelerUtility:
             meshing_options.Set(ModelerUtilities.REFINE, parameters["Refine"])
             #meshing_options.Set(ModelerUtilities.MESH_SMOOTHING, parameters["MeshSmoothing"])
             #meshing_options.Set(ModelerUtilities.VARIABLES_SMOOTHING, parameters["JacobiSmoothing"])
-            
+
             self.MeshingParameters.SetOptions(meshing_options)
 
             self.MeshingParameters.SetOffsetFactor(self.offset_factor)
             self.MeshingParameters.SetAlphaParameter(self.alpha_shape)
-                
+
             self.MeshingParameters.SetReferenceElement(parameters["MeshElement"])
             self.MeshingParameters.SetReferenceCondition("CompositeCondition2D2N")
             #self.MeshingParameters.SetReferenceCondition("WallCondition2D")
-                
+
 
             #Pre Meshing Processes
             #remove_mesh_nodes = RemoveMeshNodes(self.model_part, self.MeshingParameters, self.echo_level)
@@ -333,10 +333,10 @@ class ModelerUtility:
             #Post Meshing Processes
             rebuild_mesh_boundary = ReconstructMeshBoundary(self.model_part, self.MeshingParameters, self.echo_level)
             #rebuild_mesh_boundary = ReconstructMeshBoundaryForFluids(self.model_part, self.MeshingParameters, self.echo_level)
-           
-            
+
+
             mesh_modeler.SetPostMeshingProcess(rebuild_mesh_boundary)
-        
+
             print("::[Modeler_Utility]:: Domain Mesh [",parameters["Subdomain"],"] [ Remesh:",parameters["Remesh"],"] [ Refine:",parameters["Refine"],"]" )
             if( parameters["Remesh"] ):
                 print("(Type:",parameters["MeshElement"],")")
@@ -354,14 +354,14 @@ class ModelerUtility:
 
     #
     def GetRemeshFrequency(self):
-        
+
         remesh_frequency = 0
         for size in range(0,len(self.remesh_frequencies)):
             if((remesh_frequency > self.remesh_frequencies[size]) or remesh_frequency == 0):
                 remesh_frequency = self.remesh_frequencies[size]
-        
+
         return remesh_frequency
-            
+
 
     #
     def InitializeStep(self):
