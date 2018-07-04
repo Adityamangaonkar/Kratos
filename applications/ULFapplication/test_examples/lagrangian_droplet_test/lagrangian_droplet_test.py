@@ -38,23 +38,8 @@ variables_dictionary = {"PRESSURE" : PRESSURE,
                         "IS_STRUCTURE" : IS_STRUCTURE,
                         "VISCOUS_STRESSX": VISCOUS_STRESSX,
                         "VISCOUS_STRESSY": VISCOUS_STRESSY,
-                        "IS_WATER": IS_WATER,
-                        "DENSITY": DENSITY,
-                        "VISCOSITY": VISCOSITY}
 
-#defining a model part for the fluid
-lagrangian_model_part = ModelPart("LagrangianPart");
 
-SolverType=problem_settings.SolverType
-if (SolverType=="Incompressible_Modified_FracStep"):
-    fluid_only_model_part = ModelPart("FluidOnlyPart");
-
-#############################################
-##importing the solvers needed
-SolverType = ProjectParameters.SolverType
-
-## Choosing element type for lagrangian_model_part
-element_type = problem_settings.lagrangian_element
 import SurfaceTension_monolithic_solver as solver_lagr
 SolverSettings = ProjectParameters.FluidSolverConfiguration
 solver_lagr = import_solver(SolverSettings)
@@ -129,48 +114,19 @@ gamma = 0.072 		#surface tension coefficient [N m-1]
 contact_angle = 360.0 	#contact angle [deg]
 
 
-
-##### this is for sessile droplets####
 zeta_dissapative_JM = 0.0
 zeta_dissapative_BM = 0.0
 zeta_dissapative_SM = 0.0
-################################################################
-
-### the dissipative force is added utilizing the power law model, utilizing the capillary number when the velocity is the tangential component at the contact line,
-
-##you can choose one of the three models as:
-
-# option 1: assign: zeta_dissapative_JM = 1.0, for Jiang's Model : tanh(4.96 Ca^(0.702))
-
-## or
-
-# option 2: assign: zeta_dissapative_BM = 1.0, for Bracke's model : 2.24 ca ^(0.54)
-
-## or 
-
-# option 3 :assign: zeta_dissapative_SM = 1.0, for Seeberg's model: 2.24 ca ^(0.54) for Ca > 10^(-3), otherwise, 4.47 Ca^(0.42)
-
-##or
-
-# option 4: no dissipative force is added, by assigning zeta_dissapative_JM, zeta_dissapative_JB, and zeta_dissapative_SM to zero
-###references:
-
-#Manservisi S, Scardovelli R. A variational approach to the contact angle dynamics of spreading droplets. Computers & Fluids. 2009 Feb 1;38(2):406-24.
-#Buscaglia GC, Ausas RF. Variational formulations for surface tension, capillarity and wetting. Computer Methods in Applied Mechanics and Engineering. 2011 Oct 15;200(45-46):3011-25.
-################################################################
-
 
 lag_solver = solver_lagr.CreateSolver(lagrangian_model_part, SolverSettings, eul_model_part, gamma, contact_angle, zeta_dissapative_JM, zeta_dissapative_BM, zeta_dissapative_SM)
-
-
-
-reform_dofs_at_each_step = False
-pDiagPrecond = DiagonalPreconditioner()
 
 lag_solver.alpha_shape = problem_settings.alpha_shape;
 lag_solver.echo_level = 0;
 lag_solver.Initialize()
-print("lagrangian solver created")
+
+
+
+
 
 lagrangian_model_part.SetBufferSize(3)
 
