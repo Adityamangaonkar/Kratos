@@ -23,6 +23,9 @@ domain_size = ProjectParameters.domain_size
 import sys
 sys.path.append(ProjectParameters.kratos_path)
 from KratosMultiphysics import *
+#from KratosMultiphysics.IncompressibleFluidApplication import *
+from KratosMultiphysics.FluidDynamicsApplication import *
+from KratosMultiphysics.ExternalSolversApplication import *
 from KratosMultiphysics.MeshingApplication import *
 from KratosMultiphysics.ULFApplication import *
 
@@ -32,14 +35,43 @@ variables_dictionary = {"PRESSURE" : PRESSURE,
                         "VELOCITY" : VELOCITY,
                         "REACTION" : REACTION,
                         "DISTANCE" : DISTANCE,
-			 "AUX_VEL" : AUX_VEL,
+			 "AUX_VEL" : AUX_VEL,                        
                         "DISPLACEMENT" : DISPLACEMENT,
                         "IS_INTERFACE" : IS_INTERFACE,
                         "IS_STRUCTURE" : IS_STRUCTURE,
                         "VISCOUS_STRESSX": VISCOUS_STRESSX,
                         "VISCOUS_STRESSY": VISCOUS_STRESSY,
+                        "IS_WATER": IS_WATER,
+                        "DENSITY": DENSITY,
+                        "VISCOSITY": VISCOSITY}
+
+#defining a model part for the fluid 
+lagrangian_model_part = ModelPart("LagrangianPart");
+
+SolverType=problem_settings.SolverType
+if (SolverType=="Incompressible_Modified_FracStep"):
+    fluid_only_model_part = ModelPart("FluidOnlyPart");
+
+lagrangian_model_part.AddNodalSolutionStepVariable(DISTANCE)
+lagrangian_model_part.AddNodalSolutionStepVariable(DISPLACEMENT)
+lagrangian_model_part.AddNodalSolutionStepVariable(VELOCITY)
+lagrangian_model_part.AddNodalSolutionStepVariable(VISCOSITY)
+lagrangian_model_part.AddNodalSolutionStepVariable(DENSITY)
+lagrangian_model_part.AddNodalSolutionStepVariable(BODY_FORCE)
+lagrangian_model_part.AddNodalSolutionStepVariable(IS_FREE_SURFACE)
+lagrangian_model_part.AddNodalSolutionStepVariable(VISCOUS_STRESSX)
+lagrangian_model_part.AddNodalSolutionStepVariable(VISCOUS_STRESSY)
+lagrangian_model_part.AddNodalSolutionStepVariable(AUX_VEL)
+lagrangian_model_part.AddNodalSolutionStepVariable(CONTACT_ANGLE)
+lagrangian_model_part.AddNodalSolutionStepVariable(IS_WATER)
 
 
+#############################################
+##importing the solvers needed
+SolverType = ProjectParameters.SolverType
+
+## Choosing element type for lagrangian_model_part
+element_type = problem_settings.lagrangian_element
 import SurfaceTension_monolithic_solver as solver_lagr
 SolverSettings = ProjectParameters.FluidSolverConfiguration
 solver_lagr = import_solver(SolverSettings)
