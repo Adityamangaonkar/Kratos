@@ -12,7 +12,7 @@ variables_dictionary = {"PRESSURE" : PRESSURE,
                         "VELOCITY" : VELOCITY,
                         "REACTION" : REACTION,
                         "DISTANCE" : DISTANCE,
-			 "AUX_VEL" : AUX_VEL,                        
+			 "AUX_VEL" : AUX_VEL,
                         "DISPLACEMENT" : DISPLACEMENT,
                         "IS_INTERFACE" : IS_INTERFACE,
                         "IS_STRUCTURE" : IS_STRUCTURE,
@@ -21,7 +21,6 @@ variables_dictionary = {"PRESSURE" : PRESSURE,
                         "IS_WATER": IS_WATER,
                         "DENSITY": DENSITY,
                         "VISCOSITY": VISCOSITY}
-
 
 def AddVariables(model_part, config=None):
     model_part.AddNodalSolutionStepVariable(VELOCITY)
@@ -128,7 +127,6 @@ class STMonolithicSolver:
         self.zeta_dissapative_SM = zeta_dissapative_SM
         #self.gamma_sl = gamma_sl
         #self.gamma_sv = gamma_sv
-        
 
         # default settings
         self.echo_level = 0

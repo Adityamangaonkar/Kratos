@@ -25,7 +25,7 @@ from KratosMultiphysics.ExternalSolversApplication import *
 
 #defining a model part for the fluid and one for the structure
 fluid_model_part = ModelPart("FluidPart");
-structure_model_part = ModelPart("StructurePart");  
+structure_model_part = ModelPart("StructurePart");
 combined_model_part = ModelPart("CombinedPart");
 wall_model_part = ModelPart("WallPart");
 
@@ -82,9 +82,9 @@ solver_constructor.AddDofs(temperature_model_part,SolverSettings)
 
 
 #setting the limits of the bounding box
-box_corner1 = Vector(3); 
+box_corner1 = Vector(3);
 box_corner1[0]=problem_settings.bounding_box_corner1_x; box_corner1[1]=problem_settings.bounding_box_corner1_y; box_corner1[2]=problem_settings.bounding_box_corner1_z;
-box_corner2 = Vector(3); 
+box_corner2 = Vector(3);
 box_corner2[0]=problem_settings.bounding_box_corner2_x; box_corner2[1]=problem_settings.bounding_box_corner2_y; box_corner2[2]=problem_settings.bounding_box_corner2_z;
 
 #here we write the convergence data..,
@@ -103,17 +103,17 @@ print ("LALALA")
 ##check to ensure that no node has zero density or pressure
 
 for node in fluid_model_part.Nodes:
-    node.SetSolutionStepValue(BULK_MODULUS,0, bulk_modulus)   
+    node.SetSolutionStepValue(BULK_MODULUS,0, bulk_modulus)
     node.SetSolutionStepValue(DENSITY,0, density)
     node.SetSolutionStepValue(VISCOSITY,0, viscosity)
     node.SetSolutionStepValue(VISCOSITY,0, 10.0)
-    node.SetSolutionStepValue(BODY_FORCE_Y,0, -9.8)   
+    node.SetSolutionStepValue(BODY_FORCE_Y,0, -9.8)
 
 
 n_flag=0
 for node in fluid_model_part.Nodes:
   n_flag=n_flag+node.GetSolutionStepValue(FLAG_VARIABLE)
-  
+
 if(n_flag==0):
    print("No nodes are marked with FLAG_VARIABLE=1, which is the inblow")
    raise('NO NODES MARKED SO AS TO APPLY THE INBLOW - EXTERNAL PRESSURE')
@@ -128,11 +128,11 @@ print ("fluid solver created")
 is_fsi_interf=0.0
 
 
-    
+
 
 #settings to be changed
-Dt = problem_settings.Dt 
-full_Dt = Dt 
+Dt = problem_settings.Dt
+full_Dt = Dt
 initial_Dt = 0.001;# * full_Dt #0.05 #0.01
 final_time = problem_settings.max_time
 output_step = problem_settings.output_step
@@ -167,7 +167,7 @@ NISTTools = FaceHeatUtilities()
 
 
 print(temperature_model_part)
-print(SolverSettings) 
+print(SolverSettings)
 ####from conv_diff
 conv_diff_solver = solver_constructor.CreateSolver( temperature_model_part, SolverSettings)
 print (SolverSettings.time_order)
@@ -180,7 +180,7 @@ print (conv_diff_solver.time_order)
 
 #for node in temperature_model_part.Nodes:
 for node in fluid_model_part.Nodes:
-    node.SetSolutionStepValue(CONDUCTIVITY, 0, 5.00) 
+    node.SetSolutionStepValue(CONDUCTIVITY, 0, 5.00)
     node.SetSolutionStepValue(SPECIFIC_HEAT,0, 1400.0)
     node.Free(TEMPERATURE)
     if(node.GetSolutionStepValue(IS_STRUCTURE)==1.0):
@@ -191,7 +191,7 @@ for node in fluid_model_part.Nodes:
     if (node.Y<0.005 and node.X>0.006):
       #BOTTLE NECK
       node.SetSolutionStepValue(VISCOSITY, 0, 40.0)
-      node.SetSolutionStepValue(TEMPERATURE, 0, 750.0)   
+      node.SetSolutionStepValue(TEMPERATURE, 0, 750.0)
       node.Fix(TEMPERATURE)
 
 
@@ -219,9 +219,9 @@ counter=0
 
 
 while (time < final_time):
-    step = step+1   
-    
-    
+    step = step+1
+
+
     print(time)
     if(step <= 3):
         new_Dt = 0.00000001;
@@ -233,25 +233,25 @@ while (time < final_time):
         if (time>=0.4):
            new_Dt=0.001
         print("DT IS ")
-        print(Dt)	  
+        print(Dt)
         time = time + new_Dt*safety_factor
 
         combined_model_part.CloneTimeStep(time)
         fluid_model_part.ProcessInfo=combined_model_part.ProcessInfo
-        structure_model_part.ProcessInfo=combined_model_part.ProcessInfo   
-        wall_model_part.ProcessInfo=combined_model_part.ProcessInfo   
-        
+        structure_model_part.ProcessInfo=combined_model_part.ProcessInfo
+        wall_model_part.ProcessInfo=combined_model_part.ProcessInfo
+
         ###################################################################################
-        if (time>0.4 and counter==0):              
+        if (time>0.4 and counter==0):
           for node in fluid_model_part.Nodes:
             if (node.Y>0.013): #THATS WHERE SECOND MOULD STARTS
               if (node.GetSolutionStepValue(IS_STRUCTURE)==1):
                 node.SetSolutionStepValue(IS_INTERFACE,0, 1)
                 node.SetSolutionStepValue(IS_STRUCTURE,0, 0)
               node.Free(DISPLACEMENT_X)
-              node.Free(DISPLACEMENT_Y)                            
+              node.Free(DISPLACEMENT_Y)
               #node.Free(TEMPERATURE)
-              
+
           add_wall_process.AddWall(fluid_model_part, wall_model_part)	  
 
           counter=1
@@ -262,17 +262,17 @@ while (time < final_time):
         if (time>final_time-full_Dt):
             out_file.write( str(time)+ "\n")
             distance_to_wall.compute_distance_to_wall(combined_model_part, out_file)
-                      
+
         print ("after completing the solution")
 
         ###########################TEMPERATURE    #############################################
         fluid_model_part.ProcessInfo.SetValue(FRACTIONAL_STEP, 2);
         temperature_model_part.ProcessInfo=fluid_model_part.ProcessInfo
-        
+
         temperature_model_part.Elements.clear()
         temperature_model_part.Conditions.clear()
         temperature_model_part.Nodes.clear()
-        
+
         print (temperature_model_part)
         print (fluid_model_part)
 	
@@ -295,7 +295,7 @@ while (time < final_time):
 
         print ("Starting conv diff")
         temperature_model_part.ProcessInfo.SetValue(FRACTIONAL_STEP, 2);
-        for node in temperature_model_part.Nodes: 
+        for node in temperature_model_part.Nodes:
            if (node.Y<0.005):
               #BOTTLE NECK
               node.SetSolutionStepValue(TEMPERATURE,700.0)
@@ -311,11 +311,11 @@ while (time < final_time):
         print ("Solved conv diff")
         NistParameters.CalculateViscosity(fluid_model_part)
 
-          
+
 
 
         if(time > next_output_time):
-    
+
             file_name = input_file_name
             file_name = file_name + str(time)
 
@@ -325,8 +325,8 @@ while (time < final_time):
             gid_io.FinalizeMesh();
 
             gid_io.InitializeResults(time, (combined_model_part).GetMesh());
-    
-            gid_io.WriteNodalResults(VISCOSITY, combined_model_part.Nodes, time, 0);            
+
+            gid_io.WriteNodalResults(VISCOSITY, combined_model_part.Nodes, time, 0);
             gid_io.WriteNodalResults(VELOCITY, combined_model_part.Nodes, time, 0);
             gid_io.WriteNodalResults(DENSITY, combined_model_part.Nodes, time, 0);
             gid_io.WriteNodalResults(PRESSURE, (combined_model_part).Nodes, time, 0);
@@ -336,12 +336,12 @@ while (time < final_time):
             gid_io.WriteNodalResults(SPECIFIC_HEAT, (combined_model_part).Nodes, time, 0);
             gid_io.WriteNodalResults(CONDUCTIVITY, (combined_model_part).Nodes, time, 0);
             gid_io.WriteNodalResults(MESH_VELOCITY, (combined_model_part).Nodes, time, 0);
-            gid_io.WriteNodalResults(TEMPERATURE, (combined_model_part).Nodes, time, 0);            
+            gid_io.WriteNodalResults(TEMPERATURE, (combined_model_part).Nodes, time, 0);
             if (compute_reactions==1):
                 gid_io.WriteNodalResults(REACTION, (combined_model_part).Nodes, time, 0);
-	        
-            
-            
+
+
+
             gid_io.Flush()
             #gid_io.CloseResultFile();
             gid_io.FinalizeResults()

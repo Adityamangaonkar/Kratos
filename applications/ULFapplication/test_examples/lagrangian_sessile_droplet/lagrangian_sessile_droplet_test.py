@@ -36,7 +36,7 @@ variables_dictionary = {"PRESSURE" : PRESSURE,
                         "VELOCITY" : VELOCITY,
                         "REACTION" : REACTION,
                         "DISTANCE" : DISTANCE,
-			 "AUX_VEL" : AUX_VEL,                        
+			 "AUX_VEL" : AUX_VEL,
                         "DISPLACEMENT" : DISPLACEMENT,
                         "IS_INTERFACE" : IS_INTERFACE,
                         "IS_STRUCTURE" : IS_STRUCTURE,
@@ -46,7 +46,7 @@ variables_dictionary = {"PRESSURE" : PRESSURE,
                         "DENSITY": DENSITY,
                         "VISCOSITY": VISCOSITY}
 
-#defining a model part for the fluid 
+#defining a model part for the fluid
 lagrangian_model_part = ModelPart("LagrangianPart");
 
 SolverType=problem_settings.SolverType
@@ -131,9 +131,9 @@ elif(element_type == "SurfaceTension"):
     #mesh_solver.AddDofs(lagrangian_model_part)
 
 #setting the limits of the bounding box
-box_corner1 = Vector(3); 
+box_corner1 = Vector(3);
 box_corner1[0]=problem_settings.bounding_box_corner1_x; box_corner1[1]=problem_settings.bounding_box_corner1_y; box_corner1[2]=problem_settings.bounding_box_corner1_z;
-box_corner2 = Vector(3); 
+box_corner2 = Vector(3);
 box_corner2[0]=problem_settings.bounding_box_corner2_x; box_corner2[1]=problem_settings.bounding_box_corner2_y; box_corner2[2]=problem_settings.bounding_box_corner2_z;
 #here we write the convergence data..,
 outstring2 = "convergence_info.txt"
@@ -166,7 +166,7 @@ zeta_dissapative_SM = 0.0
 
 # option 2: assign: zeta_dissapative_BM = 1.0, for Bracke's model : 2.24 ca ^(0.54)
 
-## or 
+## or
 
 # option 3 :assign: zeta_dissapative_SM = 1.0, for Seeberg's model: 2.24 ca ^(0.54) for Ca > 10^(-3), otherwise, 4.47 Ca^(0.42)
 
@@ -220,7 +220,7 @@ Multifile = True
 ################################################################
 
 # Stepping and time settings
-Dt = ProjectParameters.Dt 
+Dt = ProjectParameters.Dt
 Nsteps  = ProjectParameters.nsteps
 final_time = ProjectParameters.max_time
 output_time = ProjectParameters.output_time
@@ -230,7 +230,7 @@ out = 0
 step = 0
 
 while(time <= final_time):
-    
+
     time = time + Dt
     step = step + 1
     lagrangian_model_part.CloneTimeStep(time)
@@ -255,15 +255,15 @@ while(time <= final_time):
             else:
                 node.Free(VELOCITY_X)
 
-      lag_solver.Solve()	
+      lag_solver.Solve()
 
 ##################################################
 ##################################################
 
     if(output_time <= out):
-      
+
         out = 0
-        
+
         gid_io.FinalizeResults()
         #f.write(ProjectParameters.problem_name+'_'+str(time)+'.post.bin\n')
 

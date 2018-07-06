@@ -88,12 +88,12 @@ class RungeKuttaFracStepSolver:
 
         if(domain_size == 2):
             self.Mesher = TriGenPFEMModeler()
-            
+
             self.fluid_neigh_finder = FindNodalNeighboursProcess(model_part,9,18)
             self.condition_neigh_finder = FindConditionsNeighboursProcess(model_part,2, 10)
-            self.elem_neighbor_finder = FindElementalNeighboursProcess(model_part, 2, 10)	
-            
-     
+            self.elem_neighbor_finder = FindElementalNeighboursProcess(model_part, 2, 10)
+
+
         self.mark_fluid_process = MarkFluidProcess(model_part);
 
         self.UlfUtils = UlfUtils()
@@ -125,12 +125,12 @@ class RungeKuttaFracStepSolver:
 
         (self.fluid_neigh_finder).Execute();
 
-        (self.ulf_apply_bc_process).Execute(); 
+        (self.ulf_apply_bc_process).Execute();
 
         for node in self.model_part.Nodes:
             node.SetSolutionStepValue(IS_FREE_SURFACE,0,0.0)
 
-        self.RemeshAux(); 
+        self.RemeshAux();
 
     def Solve(self):
 
@@ -172,13 +172,13 @@ class RungeKuttaFracStepSolver:
         h_factor=0.2
 
         if(self.domain_size == 2):
-            for node in (self.model_part).Nodes: 
-                node.SetSolutionStepValue(NODAL_H,0,0.002) 
+            for node in (self.model_part).Nodes:
+                node.SetSolutionStepValue(NODAL_H,0,0.002)
 
 
         self.node_erase_process = NodeEraseProcess(self.model_part);
-        box_corner1 = Vector(3); 
-        box_corner2 = Vector(3); 
+        box_corner1 = Vector(3);
+        box_corner2 = Vector(3);
 
 
         if(self.domain_size == 2):
@@ -201,7 +201,7 @@ class RungeKuttaFracStepSolver:
 
         self.UlfUtils.MarkNodesCloseToWall(self.model_part, self.domain_size, 2.5000)
 
-        self.UlfUtils.MarkExcessivelyCloseNodes(self.model_part.Nodes, 0.2)	 
+        self.UlfUtils.MarkExcessivelyCloseNodes(self.model_part.Nodes, 0.2)
 
         self.node_erase_process.Execute()
 
@@ -211,7 +211,7 @@ class RungeKuttaFracStepSolver:
 
         if (self.domain_size == 2):
             (self.Mesher).ReGenerateMesh("Fluid2DGLS_expl","Condition2D", self.model_part, self.node_erase_process, True, True, alpha_shape, h_factor)
-             
+
         for node in (self.model_part).Nodes:
             node.Set(TO_ERASE, False)
 

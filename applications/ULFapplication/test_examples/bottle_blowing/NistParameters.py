@@ -10,7 +10,7 @@ from KratosMultiphysics.ExternalSolversApplication import *
 import math
 #def AuxFunction(T):
 #    nu = 1.0*(10**13)*(2.718282**(-0.046*T))
-#    mu=nu 		
+#    mu=nu
 #    if(mu < 0.0):
 #        print "attention negative viscosity!!!!"
 #        mu = 0.0
@@ -27,7 +27,7 @@ import math
 
 def AuxFunction(T):
     #print "Computing viscosity"
-    
+
     #if (T>800):
       #nu=25834736472.9798*math.exp(-0.0140237333*T)/2400
       #nu=441203477*math.exp(-0.01965*T)

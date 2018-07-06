@@ -259,7 +259,7 @@ class ULF_FSISolver:
     def Remesh(self):
 
 	self.UlfUtils.MarkNodesTouchingWall(self.fluid_model_part, self.domain_size, 0.08)
-        self.UlfUtils.MarkExcessivelyCloseNodes(self.fluid_model_part.Nodes, 0.00005)	
+        self.UlfUtils.MarkExcessivelyCloseNodes(self.fluid_model_part.Nodes, 0.00005)
 
         # erase all conditions and elements prior to remeshing
         ((self.combined_model_part).Elements).clear();

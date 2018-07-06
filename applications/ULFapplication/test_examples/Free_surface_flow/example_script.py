@@ -2,15 +2,15 @@ import fluid_ulf_var
 ##################################################################
 ##################################################################
 #setting the domain size for the problem to be solved
-      
-def PrintSurfaceLevel(time, model_part, surfacelevelfilename):        
+
+def PrintSurfaceLevel(time, model_part, surfacelevelfilename):
    y_max=-10.0
    for node in model_part.Nodes:
         if((node.X < 0.000001) and (node.GetSolutionStepValue(IS_STRUCTURE)==1) and (node.GetSolutionStepValue(IS_FLUID)==1)):
              y=node.Y
              if (y>y_max):
                   y_max=y
-   outstring = str(time) + " " + str(y_max) + "\n"        
+   outstring = str(time) + " " + str(y_max) + "\n"
    surfacelevelfilename.write( outstring )
 
 
@@ -63,11 +63,11 @@ Qcomp_model_part.SetBufferSize(3)
 runge_kutta_frac_step_solver.AddDofs(Qcomp_model_part)
 
 
-for node in Qcomp_model_part.Nodes:  
+for node in Qcomp_model_part.Nodes:
     node.SetSolutionStepValue(PRESSURE,0,0.0) 
-    node.Free(VELOCITY_X) 
-    node.Free(VELOCITY_Y) 
-    node.Free(VELOCITY_Z) 
+    node.Free(VELOCITY_X)
+    node.Free(VELOCITY_Y)
+    node.Free(VELOCITY_Z)
     node.Free(PRESSURE)
     if node.GetSolutionStepValue(IS_STRUCTURE)==1.0:
         node.Fix(VELOCITY_X)#
