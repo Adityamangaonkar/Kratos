@@ -1409,7 +1409,7 @@ namespace Kratos
 		else
 		{
 			CFL = -std::sqrt(3.0)*(3.0 - std::sin(friction_angle)) / (3.0 * std::sin(friction_angle) - 3.0);
-			TEN0 = 6 * I1*std::sin(friction_angle) / (sqrt(3)*(3 - std::sin(friction_angle))) + std::sqrt(J2);
+			TEN0 = 2.0 * I1*std::sin(friction_angle) / (std::sqrt(3)*(3 - std::sin(friction_angle))) + std::sqrt(J2);
 			f = std::abs(CFL*TEN0);
 		}
 
@@ -1424,7 +1424,7 @@ namespace Kratos
 		}
 		else
 		{
-			damage = 1 - (c_max / f)*exp(A*(1 - f / c_max));   // Exponential softening law
+			damage = 1 - (c_max / f)*std::exp(A*(1 - f / c_max));   // Exponential softening law
 			if (damage > 0.99) { damage = 0.99; }
 		}
 		rIntegratedStress = StressVector;

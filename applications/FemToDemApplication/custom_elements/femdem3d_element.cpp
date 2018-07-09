@@ -1344,7 +1344,7 @@ namespace Kratos
 		else
 		{
 			CFL = -std::sqrt(3)*(3 - std::sin(friction_angle)) / (3 * std::sin(friction_angle) - 3);
-			TEN0 = 6 * I1*sin(friction_angle) / (std::sqrt(3)*(3 - std::sin(friction_angle))) + std::sqrt(J2);
+			TEN0 = 2.0 * I1*sin(friction_angle) / (std::sqrt(3)*(3 - std::sin(friction_angle))) + std::sqrt(J2);
 			f = std::abs(CFL*TEN0);
 		}
 
