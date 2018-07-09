@@ -210,16 +210,16 @@ class FEM_Solution(MainSolidFEM.Solution):
 
 
 		# Search the skin nodes for the remeshing TO BE REMOVED TODO
-		skin_detection_process_param = KratosMultiphysics.Parameters("""
-        {
-			"name_auxiliar_model_part" : "SkinDEMModelPart",
-			"name_auxiliar_condition"  : "Condition",
-			"echo_level"               : 0
-        }""")
+		# skin_detection_process_param = KratosMultiphysics.Parameters("""
+        # {
+		# 	"name_auxiliar_model_part" : "SkinDEMModelPart",
+		# 	"name_auxiliar_condition"  : "Condition",
+		# 	"echo_level"               : 0
+        # }""")
 
-		skin_detection_process = KratosMultiphysics.SkinDetectionProcess2D(self.main_model_part,
-		                                                                   skin_detection_process_param)
-		skin_detection_process.Execute()
+		# skin_detection_process = KratosMultiphysics.SkinDetectionProcess2D(self.main_model_part,
+		#                                                                    skin_detection_process_param)
+		# skin_detection_process.Execute()
 
 
 #============================================================================================================================
@@ -242,16 +242,16 @@ class FEM_Solution(MainSolidFEM.Solution):
 		neighbour_elemental_finder.Execute()
 
 		# Search the skin nodes for the remeshing
-		# skin_detection_process_param = KratosMultiphysics.Parameters("""
-        # {
-		# 	"name_auxiliar_model_part" : "SkinDEMModelPart",
-		# 	"name_auxiliar_condition"  : "Condition",
-		# 	"echo_level"               : 0
-        # }""")
+		skin_detection_process_param = KratosMultiphysics.Parameters("""
+        {
+			"name_auxiliar_model_part" : "SkinDEMModelPart",
+			"name_auxiliar_condition"  : "Condition",
+			"echo_level"               : 0
+        }""")
 
-		# skin_detection_process = KratosMultiphysics.SkinDetectionProcess2D(self.main_model_part,
-		#                                                                    skin_detection_process_param)
-		# skin_detection_process.Execute()
+		skin_detection_process = KratosMultiphysics.SkinDetectionProcess2D(self.main_model_part,
+		                                                                   skin_detection_process_param)
+		skin_detection_process.Execute()
 
 		print(" [STEP:",self.step," TIME:", self.time,"]")
 
